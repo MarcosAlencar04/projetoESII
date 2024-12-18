@@ -41,10 +41,9 @@ public class UsuarioController {
 
             return ResponseEntity.ok().body(Map.of(
                 "message", "Usuário cadastrado com sucesso! Confirme através do email.",
-                "userId", usuarioData.getId() // Retorna o ID do usuário recém-criado (ajuste conforme necessário)
+                "userId", usuarioData.getId()
             ));
         } catch (Exception e) {
-            // Trata erros e retorna uma resposta adequada
             return ResponseEntity.status(500).body(Map.of(
                 "message", "Erro ao cadastrar usuário.",
                 "error", e.getMessage()
