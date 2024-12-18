@@ -6,7 +6,7 @@ function CadastroUsuario() {
     const [usuario, setUsuario] = useState({
         nome: "",
         cpf: "",
-        senhaHash: "",
+        senha: "",
         statusConfirmado: false,
         isAdm: false,
         email: "",
@@ -92,10 +92,10 @@ function CadastroUsuario() {
                             <label htmlFor="senha">Senha</label>
                             <input
                                 id="senha"
-                                name="senhaHash"
+                                name="senha"
                                 type="password"
                                 placeholder="Digite a Senha"
-                                value={usuario.senhaHash}
+                                value={usuario.senha}
                                 onChange={handleChange}
                                 required
                             />
