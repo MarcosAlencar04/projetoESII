@@ -4,9 +4,9 @@ import "../css/style_login.css";
 import logo from "../img/logo_login.png";
 
 function Login() {
-    const navigate = useNavigate(); // Hook para redirecionar
-    const [credentials, setCredentials] = useState({ email: "", senha: "" }); // Estado para armazenar os dados do formulário
-    const [error, setError] = useState(null); // Estado para exibir erros
+    const navigate = useNavigate();
+    const [credentials, setCredentials] = useState({ email: "", senha: "" });
+    const [error, setError] = useState(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -15,7 +15,6 @@ function Login() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Envia os dados de login para o backend
         fetch("http://localhost:8080/usuarios/login", {
             method: "POST",
             headers: {
@@ -26,13 +25,12 @@ function Login() {
             .then((response) => {
                 if (!response.ok) {
                     return response.text().then((text) => {
-                        throw new Error(text); // Lança o texto retornado como erro
+                        throw new Error(text);
                     });
                 }
                 return response.json();
             })
             .then((data) => {
-                // Armazena os dados do usuário no localStorage
                 localStorage.setItem("usuarioId", data.id);
                 localStorage.setItem("usuarioNome", data.nome);
                 localStorage.setItem("usuarioIsAdm", data.isAdm);
@@ -40,7 +38,7 @@ function Login() {
 
                 alert("Login realizado com sucesso!");
                 console.log("Resposta do backend:", data);
-                navigate("/HomeLogged"); // Redireciona para a página HomeLogged
+                navigate("/HomeLogged");
             })
             .catch((error) => {
                 console.error("Erro ao realizar login:", error.message);
@@ -74,7 +72,7 @@ function Login() {
                     />
                     <input type="submit" value="Entrar" />
                 </form>
-                {error && <p className="error">{error}</p>} {/* Exibe mensagem de erro */}
+                {error && <p className="error">{error}</p>}
                 <div className="extra-buttons">
                     <a href="/cadastrarUsuario" className="button">
                         Cadastrar

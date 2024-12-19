@@ -55,7 +55,6 @@ function RecuperarSenha() {
                 <h1>Recuperação de Senha</h1>
               </div>
               <div className="line"></div>{" "}
-              {/* Linha decorativa abaixo do título */}
             </div>
             <div className="input-group">
               <div className="input-box">

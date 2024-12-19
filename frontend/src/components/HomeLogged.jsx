@@ -7,21 +7,16 @@ function HomeLogged() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Busca o usuário do localStorage
         const usuarioId = localStorage.getItem("usuarioId");
         const usuarioNome = localStorage.getItem("usuarioNome");
 
         if (usuarioId && usuarioNome) {
-            // Define o usuário no estado
             setUsuario({ id: usuarioId, nome: usuarioNome });
         }
     }, []);
 
     const handleLogout = () => {
-        // Limpa o localStorage
         localStorage.clear();
-
-        // Redireciona para a página inicial
         navigate("/");
     };
 
@@ -29,7 +24,6 @@ function HomeLogged() {
         <div className={styles.home_container}>
             <div className={styles.frame}>
                 <div className={styles.text_wrapper}>
-                    {/* Exibe o nome do usuário ou uma mensagem de carregando */}
                     {usuario ? `Bem-vindo, ${usuario.nome}` : "Carregando..."}
                 </div>
                 <button className="botao" onClick={handleLogout}>

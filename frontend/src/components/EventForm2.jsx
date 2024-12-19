@@ -16,13 +16,12 @@ function EventForm2() {
         valorInscricao: "",
     });
 
-    const [tipoEventos, setTipoEventos] = useState([]); // Estado para armazenar os tipos de eventos
+    const [tipoEventos, setTipoEventos] = useState([]);
    
    useEffect(() => {
-       // Busca os tipos de eventos no backend
        fetch("http://localhost:8080/tipoEventos/buscarTipos", {
         method: "GET",
-        mode: "cors", // Lida com requisições cross-origin
+        mode: "cors",
         headers: {
             "Content-Type": "application/json",
         },
