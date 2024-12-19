@@ -49,7 +49,21 @@ function EventForm2() {
    
    const handleSubmit = (e) => {
        e.preventDefault();
-       enviarDados(evento);
+
+       const usuarioId = localStorage.getItem("usuarioId");
+        if (!usuarioId) {
+            alert("Você não está logado. Por favor, faça login para cadastrar eventos.");
+            navigate("/")
+            return;
+        }
+
+       const isAdm = localStorage.getItem("usuarioIsAdm");
+       if (isAdm !== "true") {
+           alert("Você não tem permissão para cadastrar eventos.");
+            navigate("/HomeLogged")
+       } else{
+        enviarDados(evento);
+        }
    };
    
    const enviarDados = (evento) => {
@@ -71,7 +85,8 @@ function EventForm2() {
            .then((data) => {
                alert("Evento cadastrado com sucesso!");
                console.log("Resposta do backend:", data);
-               navigate("/");
+               const usuarioId = localStorage.getItem("usuarioId");
+                navigate("/HomeLogged")
            })
            .catch((error) => {
                console.error("Erro ao enviar os dados:", error);

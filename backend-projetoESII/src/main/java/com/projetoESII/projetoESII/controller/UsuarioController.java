@@ -81,4 +81,29 @@ public class UsuarioController {
             "Cadastro confirmado com sucesso!"
         );
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UsuarioRequestDTO loginRequest) {
+        Usuario usuario = dao.findByEmail(loginRequest.email());
+
+        if (usuario == null) {
+            return ResponseEntity.status(401).body("Usuário não encontrado.");
+        }
+
+        if (!usuario.getSenha().equals(loginRequest.senha()) || !usuario.getEmail().equals(loginRequest.email())) {
+            return ResponseEntity.status(401).body("Credenciais Incorretas.");
+        }
+
+        if (!usuario.isStatusConfirmado()) {
+            return ResponseEntity.status(403).body("Usuário ainda não confirmou o cadastro.");
+        }
+
+         return ResponseEntity.ok(new UsuarioResponseDTO(usuario.getId(),
+                                                        usuario.getNome(),
+                                                        usuario.getCpf(),
+                                                        usuario.getSenha(),
+                                                        usuario.isStatusConfirmado(),
+                                                        usuario.isAdm(),
+                                                        usuario.getEmail()));
+    }
 }

@@ -6,4 +6,5 @@ import com.projetoESII.projetoESII.entity.Usuario;
 
 public interface UsuarioDao extends JpaRepository<Usuario, Long>{
 
+    Usuario findByEmail(String email);
 }
