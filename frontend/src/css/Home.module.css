@@ -81,12 +81,15 @@ a:visited {
 /* Estrutura de linhas e colunas */
 .row {
     display: flex;
+    flex-wrap: wrap; /* Permite que os itens sejam realocados em dispositivos menores */
+    justify-content: space-between; /* Espaça uniformemente os elementos */
     align-items: center;
 }
 
 .col {
-    flex-basis: 50%; /* Cada coluna ocupa 50% */
+    flex-basis: 45%; /* Cada coluna ocupa 45% da largura, ajustável conforme necessidade */
     text-align: center;
+    margin: 10px; /* Espaçamento entre os elementos */
 }
 
 /* Títulos */
@@ -105,7 +108,7 @@ p {
 
 /* Estilo dos cards */
 .card {
-    width: 90%; /* Adapta o tamanho dos cards para dispositivos menores */
+    width: 100%; /* Adapta o tamanho dos cards para dispositivos menores */
     max-width: 350px; /* Limita o tamanho máximo */
     height: 380px;
     border-radius: 10px;
@@ -129,11 +132,11 @@ p {
 }
 
 .card2 {
-    background-image: url(../img/pic-2.jpg);
+    background-image: url(../img/visualizarrr.jpg);
 }
 
 .card3 {
-    background-image: url(../img/pic-3.png);
+    background-image: url(../img/responsaveis.png);
 }
 
 /* Efeito hover nos cards */
@@ -141,6 +144,20 @@ p {
     transform: translateY(-10px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Sombra suave no hover */
 }
+
+.cardsWrapper {
+    display: flex;         /* Ativa o Flexbox */
+    flex-wrap: wrap;       /* Permite quebrar linha */
+    justify-content: center;  /* Ajuste conforme preferir (center, space-between, etc.) */
+  }
+  
+  .cardsWrapper a {
+    /* Cada card ocupa ~50% da largura (menos margens) */
+    flex: 0 0 calc(50% - 20px);
+    margin: 10px;
+    /* Você pode manter suas demais regras de .card aqui 
+       ou deixá-las no .card, conforme seu design */
+  }
 
 /* Títulos dentro dos cards */
 h5 {

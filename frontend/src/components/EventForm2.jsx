@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import formImage from "../img/es2.svg"; 
-import "../css/EventForm2.css";
+import "../css/EventForm.css";
 
 function EventForm2() {
     const navigate = useNavigate();
