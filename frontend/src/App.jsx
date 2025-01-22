@@ -9,8 +9,8 @@ import CadastroUsuario from "./components/cadastroUsuario.jsx";
 import RecuperarSenha from "./components/recuperarSenha.jsx";
 import CriarAcao from "./components/CriarAcao.jsx";
 import CriarResponsavel from "./components/CriarResponsavel.jsx";
-import './main.css'
-
+import InscricaoEvento from "./components/InscricaoEvento.jsx";
+import './main.css';
 
 function App() {
     return (
@@ -18,18 +18,19 @@ function App() {
             <div className="main">
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    <Route path="/HomeLogged" element={<HomeLogged/>} />
-                    <Route path="/register" element={<EventForm2/>} />
-                    <Route path="/visualizar" element={<VisualizarEventos/>} />
-                    <Route path="/login" element={<Login/>}/>
-                    <Route path="/recuperarSenha" element={<RecuperarSenha/>}/>
-                    <Route path="/cadastrarUsuario" element={<CadastroUsuario/>}/>
-                    <Route path="/responsaveis" element={<CriarResponsavel/>}/>
+                    <Route path="/HomeLogged" element={<HomeLogged />} />
+                    <Route path="/register" element={<EventForm2 />} />
+                    <Route path="/visualizar" element={<VisualizarEventos />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/recuperarSenha" element={<RecuperarSenha />} />
+                    <Route path="/cadastrarUsuario" element={<CadastroUsuario />} />
+                    <Route path="/responsaveis" element={<CriarResponsavel />} />
                     <Route path="/eventos/:eventoId/criar-acao" element={<CriarAcao />} />
+                    <Route path="/inscricao" element={<InscricaoEvento />} /> {/* Nova rota */}
                 </Routes>
             </div>
         </Router>
     );
 }
 
-export default App; // Agora estamos exportando corretamente
+export default App;

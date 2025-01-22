@@ -139,6 +139,10 @@ p {
     background-image: url(../img/responsaveis.png);
 }
 
+.card4{
+    background-image: url(../img/inscricao.jpg);
+}
+
 /* Efeito hover nos cards */
 .card:hover {
     transform: translateY(-10px);

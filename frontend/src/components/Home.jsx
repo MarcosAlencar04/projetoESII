@@ -26,6 +26,9 @@ function Home() {
                 <a href="/responsaveis" className={`${styles.card} ${styles.card3}`}>
                     <h5>Cadastrar Responsáveis</h5>
                 </a>
+                <a href="/inscricao" className={`${styles.card} ${styles.card4}`}>
+                    <h5>Inscrever-se</h5>
+                </a>
                 </div>
             </div>
             </div>
