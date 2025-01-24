@@ -39,6 +39,13 @@ function HomeLogged() {
                         <a href="/register" className={`${styles.card} ${styles.card1}`}>
                             <h5>Cadastrar Evento</h5>
                         </a>
+                        <a href="/visualizar" className={`${styles.card} ${styles.card2}`}>
+                            <h5>Visualizar Eventos</h5>
+                        </a>
+                        <a href="/responsaveis" className={`${styles.card} ${styles.card3}`}>
+                            <h5>Cadastrar Responsáveis</h5>
+                        </a>
+                      
                     </div>
                 </div>
             </div>

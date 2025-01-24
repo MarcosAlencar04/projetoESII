@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
+
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-y: auto; 
+    font-family: 'Roboto', sans-serif;
+}
+
+.criarResponsavelContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px auto;
+    padding: 20px;
+    width: 90%;
+    max-width: 600px; /* Pode ajustar se quiser menor que CriarAcao */
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.criarResponsavelFormImage img {
+    width: 100%;
+    max-width: 150px;
+    margin: 20px auto;
+    display: block;
+}
+
+.criarResponsavelForm {
+    width: 100%;
+}
+
+.criarResponsavelFormHeader .criarResponsavelTitle h1 {
+    font-size: 1.8rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.criarResponsavelInputBox {
+    margin-bottom: 15px;
+}
+
+.criarResponsavelInputBox label {
+    font-size: 1rem;
+    color: #444;
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid #6b63fff1;
+}
+
+.criarResponsavelSignButton {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.criarResponsavelBotao {
+    background-color: #3878b1;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.criarResponsavelBotao:hover {
+    background-color: #195488;
+}
+
+.criarResponsavelBackButton .criarResponsavelButtonStyle {
+    background-color: #ccc;
+    color: #2b2a2a;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.criarResponsavelBackButton .criarResponsavelButtonStyle:hover {
+    background-color: #8d8b8b;
+}
