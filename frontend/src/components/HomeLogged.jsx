@@ -50,6 +50,9 @@ function HomeLogged() {
                             <a href="/inscricao" className={`${styles.card} ${styles.card4}`}>
                                 <h5>Inscrever-se</h5>
                             </a>
+                            <a href="/criar-acao" className={`${styles.card} ${styles.card1}`}>
+                                <h5>Cadastrar acao</h5>
+                            </a>
                             </div>
                         </div>
                         </div>

@@ -1,29 +1,47 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import formImage from "../img/es2.svg";
 import "../css/CriarAcao.css";
 
 function CriarAcao() {
     const navigate = useNavigate();
-    const { eventoId } = useParams(); // Obtém o ID do evento pela URL
 
     const [acao, setAcao] = useState({
-        nome: "",
-        tipo: "",
-        duracao: "",
+        titulo: "",
+        tipoAcoes: "",
+        usuarioResponsavel: "",
+        evento: "",
         dataInicio: "",
         dataTermino: "",
         valor: "",
-        vagas: "",
-        responsavel: "",
+        vagasDisponiveis: "",
     });
 
     const [responsaveis, setResponsaveis] = useState([]);
     const [tiposAcao, setTiposAcao] = useState([]);
+    const [eventos, setEventos] = useState([]);
 
+    // Verificação de acesso ao carregar o componente
     useEffect(() => {
-        // Busca os tipos de ação
-        fetch("http://localhost:8080/tipoAcoes", {
+        const usuarioId = localStorage.getItem("usuarioId");
+        const isAdm = localStorage.getItem("usuarioIsAdm");
+        const isResponsavel = localStorage.getItem("usuarioIsResponsavel");
+        const statusConfirmado = localStorage.getItem("usuarioStatusConfirmado");
+
+        if (!usuarioId || statusConfirmado !== "true") {
+            alert("Você não está autorizado a acessar esta página. Por favor, faça login ou aguarde a confirmação do seu cadastro.");
+            navigate("/");
+            return;
+        }
+
+        if (isAdm !== "true" && isResponsavel !== "true") {
+            alert("Você não tem permissão para cadastrar ações.");
+            navigate("/HomeLogged");
+            return;
+        }
+
+        // Busca os tipos de ações
+        fetch("http://localhost:8080/tipoAcoes/buscarTipos", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -31,10 +49,9 @@ function CriarAcao() {
         })
             .then((response) => response.json())
             .then((data) => setTiposAcao(data))
-            .catch((error) => console.error("Erro ao buscar tipos de ação:", error));
+            .catch((error) => console.error("Erro ao buscar tipos de ações:", error));
 
-        // Busca os responsáveis
-        fetch("http://localhost:8080/responsaveis", {
+        fetch("http://localhost:8080/usuarios/buscarResponsaveis", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -43,17 +60,36 @@ function CriarAcao() {
             .then((response) => response.json())
             .then((data) => setResponsaveis(data))
             .catch((error) => console.error("Erro ao buscar responsáveis:", error));
-    }, []);
+
+        fetch("http://localhost:8080/eventos/buscarEventos", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => setEventos(data))
+            .catch((error) => console.error("Erro ao buscar eventos:", error));
+    }, [navigate]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setAcao({ ...acao, [name]: value });
+
+        const parsedValue = name === "valor" 
+            ? parseFloat(value)
+            : name === "vagasDisponiveis"
+            ? parseInt(value, 10)
+            : value;
+
+        setAcao({ ...acao, [name]: parsedValue });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        fetch(`http://localhost:8080/eventos/${eventoId}/cadastrarAcao`, {
+        console.log("Payload enviado:", acao);
+
+        fetch("http://localhost:8080/acoes/cadastrarAcao", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -62,15 +98,13 @@ function CriarAcao() {
         })
             .then((response) => {
                 if (!response.ok) {
-                    throw new Error(
-                        "Erro na resposta do servidor: " + response.statusText
-                    );
+                    throw new Error("Erro na resposta do servidor: " + response.statusText);
                 }
                 return response.json();
             })
             .then((data) => {
                 alert("Ação cadastrada com sucesso!");
-                navigate(`/visualizar`); // Redireciona para a página de visualização
+                navigate("/visualizar"); // Redireciona para a página de visualização
             })
             .catch((error) => {
                 console.error("Erro ao enviar os dados:", error);
@@ -91,44 +125,44 @@ function CriarAcao() {
                         </div>
                     </div>
                     <div className="criarAcaoInputBox">
-                        <label htmlFor="nomeAcao">Título da Ação</label>
+                        <label htmlFor="titulo">Título da Ação</label>
                         <input
-                            id="nomeAcao"
-                            name="nome"
+                            id="titulo"
+                            name="titulo"
                             type="text"
-                            placeholder="Digite o Título da Ação"
-                            value={acao.nome}
+                            placeholder="Digite o título da ação"
+                            value={acao.titulo}
                             onChange={handleChange}
                             required
                         />
                     </div>
                     <div className="criarAcaoInputBox">
-                        <label htmlFor="tipoAcao">Tipo da Ação</label>
+                        <label htmlFor="tipoAcoes">Tipo de Ação</label>
                         <select
-                            id="tipoAcao"
-                            name="tipo"
-                            value={acao.tipo}
+                            id="tipoAcoes"
+                            name="tipoAcoes"
+                            value={acao.tipoAcoes}
                             onChange={handleChange}
                             required
                         >
-                            <option value="">Selecione o Tipo da Ação</option>
+                            <option value="">Selecione o tipo de ação</option>
                             {tiposAcao.map((tipo) => (
-                                <option key={tipo.id} value={tipo.nome}>
-                                    {tipo.nome}
+                                <option key={tipo.id} value={tipo.descricao}>
+                                    {tipo.descricao}
                                 </option>
                             ))}
                         </select>
                     </div>
                     <div className="criarAcaoInputBox">
-                        <label htmlFor="responsavelAcao">Responsável</label>
+                        <label htmlFor="usuarioResponsavel">Responsável</label>
                         <select
-                            id="responsavelAcao"
-                            name="responsavel"
-                            value={acao.responsavel}
+                            id="usuarioResponsavel"
+                            name="usuarioResponsavel"
+                            value={acao.usuarioResponsavel}
                             onChange={handleChange}
                             required
                         >
-                            <option value="">Selecione o Responsável</option>
+                            <option value="">Selecione o responsável</option>
                             {responsaveis.map((resp) => (
                                 <option key={resp.id} value={resp.nome}>
                                     {resp.nome}
@@ -137,40 +171,21 @@ function CriarAcao() {
                         </select>
                     </div>
                     <div className="criarAcaoInputBox">
-                        <label htmlFor="duracaoAcao">Duração (em horas)</label>
-                        <input
-                            id="duracaoAcao"
-                            name="duracao"
-                            type="number"
-                            placeholder="Digite a duração em horas"
-                            value={acao.duracao}
+                        <label htmlFor="evento">Evento</label>
+                        <select
+                            id="evento"
+                            name="evento"
+                            value={acao.evento}
                             onChange={handleChange}
                             required
-                        />
-                    </div>
-                    <div className="criarAcaoInputBox">
-                        <label htmlFor="valorAcao">Valor</label>
-                        <input
-                            id="valorAcao"
-                            name="valor"
-                            type="number"
-                            placeholder="Digite o valor"
-                            value={acao.valor}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="criarAcaoInputBox">
-                        <label htmlFor="vagasAcao">Quantidade de Vagas</label>
-                        <input
-                            id="vagasAcao"
-                            name="vagas"
-                            type="number"
-                            placeholder="Digite a quantidade de vagas"
-                            value={acao.vagas}
-                            onChange={handleChange}
-                            required
-                        />
+                        >
+                            <option value="">Selecione o evento</option>
+                            {eventos.map((evento) => (
+                                <option key={evento.id} value={evento.nome}>
+                                    {evento.nome}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                     <div className="criarAcaoInputBox">
                         <label htmlFor="dataInicio">Data de Início</label>
@@ -190,6 +205,31 @@ function CriarAcao() {
                             name="dataTermino"
                             type="date"
                             value={acao.dataTermino}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="criarAcaoInputBox">
+                        <label htmlFor="valor">Valor</label>
+                        <input
+                            id="valor"
+                            name="valor"
+                            type="number"
+                            step="0.01"
+                            placeholder="Digite o valor"
+                            value={acao.valor}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="criarAcaoInputBox">
+                        <label htmlFor="vagasDisponiveis">Vagas Disponíveis</label>
+                        <input
+                            id="vagasDisponiveis"
+                            name="vagasDisponiveis"
+                            type="number"
+                            placeholder="Digite a quantidade de vagas"
+                            value={acao.vagasDisponiveis}
                             onChange={handleChange}
                             required
                         />

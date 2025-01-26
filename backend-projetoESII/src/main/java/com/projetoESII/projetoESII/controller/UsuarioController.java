@@ -127,5 +127,11 @@ public class UsuarioController {
         }
     }
 
+    @GetMapping("/buscarResponsaveis")
+    public List<UsuarioResponseDTO> getResponsaveis() {
+        List<UsuarioResponseDTO> list = dao.findByIsResponsavel(true).stream().map(UsuarioResponseDTO::new).toList();
+        return list;
+    }
+    
     
 }

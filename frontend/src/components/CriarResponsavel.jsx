@@ -13,6 +13,23 @@ function CriarResponsavel() {
   const [usuarios, setUsuarios] = useState([]);
 
   useEffect(() => {
+    const usuarioId = localStorage.getItem("usuarioId");
+    const isAdm = localStorage.getItem("usuarioIsAdm");
+    const isResponsavel = localStorage.getItem("usuarioIsResponsavel");
+    const statusConfirmado = localStorage.getItem("usuarioStatusConfirmado");
+
+    if (!usuarioId || statusConfirmado !== "true") {
+      alert("Você não está autorizado a acessar esta página. Por favor, faça login ou aguarde a confirmação do seu cadastro.");
+      navigate("/");
+      return;
+  }
+
+  if (isAdm !== "true" && isResponsavel !== "true") {
+      alert("Você não tem permissão para cadastrar ações.");
+      navigate("/HomeLogged");
+      return;
+  }
+
     fetch("http://localhost:8080/usuarios/buscarUsuarios", {
       method: "GET",
       headers: {

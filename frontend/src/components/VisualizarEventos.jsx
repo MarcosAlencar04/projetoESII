@@ -55,8 +55,7 @@ function VisualizarEventos() {
                             <p>Data Término: {new Date(evento.dataTermino).toLocaleDateString()}</p>
                             <p>Local: {evento.local}</p>
                             <p>Vagas Disponíveis: {evento.vagasDisponiveis}</p>
-                            <p>Valor Inscrição: R$ {evento.valorInscricao.toFixed(2)}</p><br></br>
-                            <a href={`/eventos/${evento.id}/criar-acao`} className="botao">Criar Ação</a>
+                            <p>Valor Inscrição: R$ {evento.valorInscricao.toFixed(2)}</p>
                         </div>
                     ))
                 ) : (

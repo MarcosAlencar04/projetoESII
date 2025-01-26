@@ -25,7 +25,7 @@ function App() {
                     <Route path="/recuperarSenha" element={<RecuperarSenha />} />
                     <Route path="/cadastrarUsuario" element={<CadastroUsuario />} />
                     <Route path="/responsaveis" element={<CriarResponsavel />} />
-                    <Route path="/eventos/:eventoId/criar-acao" element={<CriarAcao />} />
+                    <Route path="/criar-acao" element={<CriarAcao />} />
                     <Route path="/inscricao" element={<InscricaoEvento />} /> {/* Nova rota */}
                 </Routes>
             </div>
