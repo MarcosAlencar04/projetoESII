@@ -1,28 +1,43 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styles from '../css/VisualizarEventos.module.css';
 
 function VisualizarEventos() {
-    const eventos = [
-        {
-            id: 1,
-            nome: "Workshop de React",
-            data: "20/12/2024",
-            local: "São Paulo",
-            acoes: [
-                { id: 1, tipo: "Palestra", nome: "Introdução ao React" },
-                { id: 2, tipo: "Minicurso", nome: "Hooks Avançados" },
-            ],
-        },
-        {
-            id: 2,
-            nome: "Congresso de IA",
-            data: "25/12/2024",
-            local: "Rio de Janeiro",
-            acoes: [
-                { id: 1, tipo: "Palestra", nome: "Fundamentos de IA" },
-            ],
-        },
-    ];
+    const [eventos, setEventos] = useState([]); // Estado para armazenar os eventos
+    const [loading, setLoading] = useState(true); // Estado para controlar o carregamento
+    const [error, setError] = useState(null); // Estado para tratar erros
+
+    useEffect(() => {
+        // Faz a chamada para o backend
+        fetch("http://localhost:8080/eventos/buscarEventos", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Erro ao buscar eventos");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setEventos(data); // Armazena os eventos no estado
+                setLoading(false); // Finaliza o carregamento
+            })
+            .catch((error) => {
+                console.error("Erro ao buscar eventos:", error);
+                setError("Ocorreu um erro ao buscar os eventos."); // Define o erro no estado
+                setLoading(false);
+            });
+    }, []);
+
+    if (loading) {
+        return <div>Carregando eventos...</div>;
+    }
+
+    if (error) {
+        return <div>{error}</div>;
+    }
 
     return (
         <div className={styles.visualizar_container}>
@@ -31,28 +46,22 @@ function VisualizarEventos() {
                 <a href="/" className="botao">Home</a>
             </div>
             <div className={styles.eventos_container}>
-                {eventos.map((evento) => (
-                    <div key={evento.id} className={styles.evento_card}>
-                        <h3>{evento.nome}</h3>
-                        <p>Data: {evento.data}</p>
-                        <p>Local: {evento.local}</p>
-                        <div className={styles.acoes_container}>
-                            <h4>Ações:</h4>
-                            {evento.acoes.length > 0 ? (
-                                <ul>
-                                    {evento.acoes.map((acao) => (
-                                        <li key={acao.id}>
-                                            {acao.tipo}: {acao.nome}
-                                        </li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p>Sem ações cadastradas</p>
-                            )}
+                {eventos.length > 0 ? (
+                    eventos.map((evento) => (
+                        <div key={evento.id} className={styles.evento_card}>
+                            <h3>{evento.nome}</h3>
+                            <p>Tipo: {evento.tipoEventos.descricao}</p>
+                            <p>Data Início: {new Date(evento.dataInicio).toLocaleDateString()}</p>
+                            <p>Data Término: {new Date(evento.dataTermino).toLocaleDateString()}</p>
+                            <p>Local: {evento.local}</p>
+                            <p>Vagas Disponíveis: {evento.vagasDisponiveis}</p>
+                            <p>Valor Inscrição: R$ {evento.valorInscricao.toFixed(2)}</p><br></br>
+                            <a href={`/eventos/${evento.id}/criar-acao`} className="botao">Criar Ação</a>
                         </div>
-                        <a href={`/eventos/${evento.id}/criar-acao`} className="botao">Criar Ação</a>
-                        </div>
-                ))}
+                    ))
+                ) : (
+                    <p>Nenhum evento disponível.</p>
+                )}
             </div>
         </div>
     );
