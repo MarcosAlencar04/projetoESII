@@ -104,6 +104,28 @@ public class UsuarioController {
                                                         usuario.getSenha(),
                                                         usuario.isStatusConfirmado(),
                                                         usuario.isAdm(),
+                                                        usuario.isResponsavel(),
                                                         usuario.getEmail()));
     }
+
+    @PostMapping("setResponsavel")
+    public ResponseEntity<?> setResponsavel(@RequestBody Map<String, String> body) {
+        try {
+            String nome = body.get("nome");
+            Usuario usuario = dao.findByNome(nome);
+            usuario.setResponsavel(true);
+            dao.save(usuario);
+
+            return ResponseEntity.ok().body(Map.of(
+                "message", "Usuário definido como responsável com sucesso!"
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of(
+                "message", "Erro ao definir responsável.",
+                "error", e.getMessage()
+            ));
+        }
+    }
+
+    
 }

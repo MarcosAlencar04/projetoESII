@@ -9,6 +9,7 @@ function CadastroUsuario() {
         senha: "",
         statusConfirmado: false,
         isAdm: false,
+        isResponsavel: false,
         email: "",
     });
 

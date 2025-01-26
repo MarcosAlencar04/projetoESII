@@ -21,6 +21,7 @@ public class Usuario {
     public String senha;
     public boolean statusConfirmado;
     public boolean isAdm;
+    public boolean isResponsavel;
     public String email;
 
     public Usuario(UsuarioRequestDTO data){
@@ -30,6 +31,7 @@ public class Usuario {
         this.statusConfirmado = data.statusConfirmado();
         this.isAdm = data.isAdm();
         this.email = data.email();
+        this.isResponsavel = data.isResponsavel();
     }
     
     

@@ -34,6 +34,7 @@ function Login() {
                 localStorage.setItem("usuarioId", data.id);
                 localStorage.setItem("usuarioNome", data.nome);
                 localStorage.setItem("usuarioIsAdm", data.isAdm);
+                localStorage.setItem("usuarioIsResponsavel", data.isResponsavel);
                 localStorage.setItem("usuarioStatusConfirmado", data.statusConfirmado);
 
                 alert("Login realizado com sucesso!");
