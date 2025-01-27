@@ -25,7 +25,7 @@ function CriarResponsavel() {
   }
 
   if (isAdm !== "true" && isResponsavel !== "true") {
-      alert("Você não tem permissão para cadastrar ações.");
+      alert("Você não tem permissão para definir Responsáveis.");
       navigate("/HomeLogged");
       return;
   }

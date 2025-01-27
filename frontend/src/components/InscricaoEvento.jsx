@@ -58,7 +58,7 @@ const FormInscricao = () => {
     }
 
     if (isAdm !== "true" && isResponsavel !== "true") {
-      alert("Você não tem permissão para cadastrar ações.");
+      alert("Você não tem permissão para inscrever usuarios em eventos.");
       navigate("/HomeLogged");
       return;
     }
