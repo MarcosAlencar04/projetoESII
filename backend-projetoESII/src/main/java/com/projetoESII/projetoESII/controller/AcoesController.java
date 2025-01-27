@@ -20,6 +20,10 @@ import com.projetoESII.projetoESII.dao.UsuarioDao;
 import com.projetoESII.projetoESII.dto.AcoesRequestDTO;
 import com.projetoESII.projetoESII.dto.AcoesResponseDTO;
 import com.projetoESII.projetoESII.entity.Acoes;
+import com.projetoESII.projetoESII.entity.Eventos;
+
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -41,8 +45,6 @@ public class AcoesController {
     @PostMapping("/cadastrarAcao")
     public ResponseEntity<?> saveAcao(@RequestBody AcoesRequestDTO data) {
     try {
-        System.out.println("Recebido: " + data);
-
         Acoes acoesData = new Acoes(data);
 
         acoesData.setTipoAcoes(
@@ -84,5 +86,16 @@ public class AcoesController {
         List<AcoesResponseDTO> list = dao.findAll().stream().map(AcoesResponseDTO::new).toList();
         return list;
     }
+
+    @GetMapping("/buscarPorEvento")
+    public List<AcoesResponseDTO> getByEvento(@RequestParam("nome") String nome) {
+        Eventos evento = eventoDao.findByNome(nome);
+        List<AcoesResponseDTO> list = dao.findByEvento(evento).stream().map(AcoesResponseDTO::new).toList();
+        return list;
+    }
+
+
+    
+
 
 }
