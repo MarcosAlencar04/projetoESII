@@ -42,7 +42,6 @@ function CadastroUsuario() {
             })
             .then((data) => {
                 alert("Cadastro realizado com sucesso! Confirme através de email");
-                navigate("/")
                 console.log("Resposta do backend:", data);
             })
             .catch((error) => {
