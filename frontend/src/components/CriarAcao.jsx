@@ -104,7 +104,7 @@ function CriarAcao() {
             })
             .then((data) => {
                 alert("Ação cadastrada com sucesso!");
-                navigate("/visualizar"); // Redireciona para a página de visualização
+                navigate("/visualizar");
             })
             .catch((error) => {
                 console.error("Erro ao enviar os dados:", error);

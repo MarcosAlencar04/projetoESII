@@ -9,7 +9,7 @@ const FormInscricao = () => {
   const [selectedUser, setSelectedUser] = useState("");
   const [events, setEvents] = useState([]);
 
-  // Fetch de eventos do backend
+
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -44,8 +44,25 @@ const FormInscricao = () => {
     }
   };
 
-  // Buscar usuários do backend
   useEffect(() => {
+
+    const usuarioId = localStorage.getItem("usuarioId");
+    const isAdm = localStorage.getItem("usuarioIsAdm");
+    const isResponsavel = localStorage.getItem("usuarioIsResponsavel");
+    const statusConfirmado = localStorage.getItem("usuarioStatusConfirmado");
+
+    if (!usuarioId || statusConfirmado !== "true") {
+      alert("Você não está autorizado a acessar esta página. Por favor, faça login ou aguarde a confirmação do seu cadastro.");
+      navigate("/");
+      return;
+    }
+
+    if (isAdm !== "true" && isResponsavel !== "true") {
+      alert("Você não tem permissão para cadastrar ações.");
+      navigate("/HomeLogged");
+      return;
+    }
+    
     const fetchUsers = async () => {
       try {
         const response = await fetch("http://localhost:8080/usuarios/buscarUsuarios");
@@ -59,7 +76,6 @@ const FormInscricao = () => {
     fetchUsers();
   }, []);
 
-  // Submit da inscrição
 const handleSubmit = async (e) => {
   e.preventDefault();
 
@@ -72,7 +88,7 @@ const handleSubmit = async (e) => {
     evento: selectedEvent,
     acao: selectedAction,
     usuario: selectedUser,
-    dataInscricao: formatDate(new Date()), // Data no formato yyyy-MM-dd
+    dataInscricao: formatDate(new Date()),
   };
 
   try {
@@ -88,6 +104,7 @@ const handleSubmit = async (e) => {
       setSelectedAction("");
       setSelectedUser("");
       setEventActions([]);
+      navigate("/")
     } else {
       const errorData = await response.json();
       alert(`Erro ao enviar inscrição: ${errorData.message}`);
@@ -97,7 +114,6 @@ const handleSubmit = async (e) => {
   }
 };
 
-// Função para formatar a data
 const formatDate = (date) => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -106,7 +122,6 @@ const formatDate = (date) => {
 };
 
 
-  // Botão "Voltar" para retornar à página anterior
   const handleBack = () => {
     window.history.back();
   };
