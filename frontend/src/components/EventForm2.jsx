@@ -19,18 +19,6 @@ function EventForm2() {
     const [tipoEventos, setTipoEventos] = useState([]);
    
    useEffect(() => {
-        if (!usuarioId) {
-            alert("Você não está logado. Por favor, faça login para cadastrar eventos.");
-            navigate("/")
-            return;
-        }
-
-        const isAdm = localStorage.getItem("usuarioIsAdm");
-        if (isAdm !== "true") {
-            alert("Você não tem permissão para cadastrar eventos.");
-            navigate("/HomeLogged")
-        }
-        
        fetch("http://localhost:8080/tipoEventos/buscarTipos", {
         method: "GET",
         mode: "cors",
@@ -60,8 +48,21 @@ function EventForm2() {
    
    const handleSubmit = (e) => {
        e.preventDefault();
-       enviarDados(evento);
+
        const usuarioId = localStorage.getItem("usuarioId");
+        if (!usuarioId) {
+            alert("Você não está logado. Por favor, faça login para cadastrar eventos.");
+            navigate("/")
+            return;
+        }
+
+       const isAdm = localStorage.getItem("usuarioIsAdm");
+       if (isAdm !== "true") {
+           alert("Você não tem permissão para cadastrar eventos.");
+            navigate("/HomeLogged")
+       } else{
+        enviarDados(evento);
+        }
    };
    
    const enviarDados = (evento) => {

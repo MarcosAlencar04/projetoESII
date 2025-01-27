@@ -1,16 +1,28 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "../css/Inscricao.css";
 
 const FormInscricao = () => {
   const [selectedEvent, setSelectedEvent] = useState("");
   const [eventActions, setEventActions] = useState([]);
-  const [users, setUsers] = useState([]);
   const [selectedAction, setSelectedAction] = useState("");
-  const [selectedUser, setSelectedUser] = useState("");
   const [events, setEvents] = useState([]);
-
+  const [loggedUser, setLoggedUser] = useState(""); // Armazena o nome do usuário logado
+  const navigate = useNavigate();
 
   useEffect(() => {
+    // Verifica se o usuário está logado
+    const usuarioNome = localStorage.getItem("usuarioNome");
+    const usuarioId = localStorage.getItem("usuarioId");
+
+    if (!usuarioNome || !usuarioId) {
+      alert("Você precisa estar logado para acessar esta página.");
+      navigate("/login"); // Redireciona para a página de login
+      return;
+    }
+
+    setLoggedUser(usuarioNome); // Define o nome do usuário logado
+
     const fetchEvents = async () => {
       try {
         const response = await fetch("http://localhost:8080/eventos/buscarEventos");
@@ -22,7 +34,7 @@ const FormInscricao = () => {
     };
 
     fetchEvents();
-  }, []);
+  }, [navigate]);
 
   const handleEventChange = async (event) => {
     const selectedId = event.target.value;
@@ -44,83 +56,49 @@ const FormInscricao = () => {
     }
   };
 
-  useEffect(() => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    const usuarioId = localStorage.getItem("usuarioId");
-    const isAdm = localStorage.getItem("usuarioIsAdm");
-    const isResponsavel = localStorage.getItem("usuarioIsResponsavel");
-    const statusConfirmado = localStorage.getItem("usuarioStatusConfirmado");
-
-    if (!usuarioId || statusConfirmado !== "true") {
-      alert("Você não está autorizado a acessar esta página. Por favor, faça login ou aguarde a confirmação do seu cadastro.");
-      navigate("/");
+    if (!selectedEvent || !selectedAction || !loggedUser) {
+      alert("Por favor, selecione um evento e uma ação.");
       return;
     }
 
-    if (isAdm !== "true" && isResponsavel !== "true") {
-      alert("Você não tem permissão para inscrever usuarios em eventos.");
-      navigate("/HomeLogged");
-      return;
-    }
-    
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch("http://localhost:8080/usuarios/buscarUsuarios");
-        const data = await response.json();
-        setUsers(data);
-      } catch (error) {
-        console.error("Erro ao buscar usuários:", error);
-      }
+    const payload = {
+      evento: selectedEvent,
+      acao: selectedAction,
+      usuario: loggedUser,
+      dataInscricao: formatDate(new Date()),
     };
 
-    fetchUsers();
-  }, []);
+    try {
+      const response = await fetch("http://localhost:8080/inscricoes/realizarInscricao", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  if (!selectedEvent || !selectedAction || !selectedUser) {
-    alert("Por favor, selecione um evento, uma ação e um usuário.");
-    return;
-  }
-
-  const payload = {
-    evento: selectedEvent,
-    acao: selectedAction,
-    usuario: selectedUser,
-    dataInscricao: formatDate(new Date()),
+      if (response.ok) {
+        alert("Inscrição enviada com sucesso!");
+        setSelectedEvent("");
+        setSelectedAction("");
+        setEventActions([]);
+        navigate("/HomeLogged");
+      } else {
+        const errorData = await response.json();
+        alert(`Erro ao enviar inscrição: ${errorData.message}`);
+      }
+    } catch (error) {
+      console.error("Erro ao enviar inscrição:", error);
+    }
   };
 
-  try {
-    const response = await fetch("http://localhost:8080/inscricoes/realizarInscricao", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    if (response.ok) {
-      alert("Inscrição enviada com sucesso!");
-      setSelectedEvent("");
-      setSelectedAction("");
-      setSelectedUser("");
-      setEventActions([]);
-      navigate("/")
-    } else {
-      const errorData = await response.json();
-      alert(`Erro ao enviar inscrição: ${errorData.message}`);
-    }
-  } catch (error) {
-    console.error("Erro ao enviar inscrição:", error);
-  }
-};
-
-const formatDate = (date) => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
-
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
 
   const handleBack = () => {
     window.history.back();
@@ -130,6 +108,17 @@ const formatDate = (date) => {
     <div className="form-container">
       <h2>Inscrição no Evento</h2>
       <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="usuario">Usuário</label>
+          <input
+            type="text"
+            id="usuario"
+            value={loggedUser}
+            disabled
+            className="readonly-field"
+          />
+        </div>
+
         <div className="form-group">
           <label htmlFor="evento">Evento</label>
           <select id="evento" value={selectedEvent} onChange={handleEventChange} required>
@@ -160,23 +149,6 @@ const formatDate = (date) => {
             </select>
           </div>
         )}
-
-        <div className="form-group">
-          <label htmlFor="usuario">Usuário</label>
-          <select
-            id="usuario"
-            value={selectedUser}
-            onChange={(e) => setSelectedUser(e.target.value)}
-            required
-          >
-            <option value="">Selecione um usuário</option>
-            {users.map((usuario) => (
-              <option key={usuario.id} value={usuario.nome}>
-                {usuario.nome}
-              </option>
-            ))}
-          </select>
-        </div>
 
         <div className="button-group">
           <button type="button" className="btn-back" onClick={handleBack}>

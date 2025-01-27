@@ -15,7 +15,10 @@ import com.projetoESII.projetoESII.dao.EventosDao;
 import com.projetoESII.projetoESII.dao.InscricoesDao;
 import com.projetoESII.projetoESII.dao.UsuarioDao;
 import com.projetoESII.projetoESII.dto.InscricoesRequestDTO;
+import com.projetoESII.projetoESII.entity.Acoes;
 import com.projetoESII.projetoESII.entity.Inscricoes;
+
+import jakarta.transaction.Transactional;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -34,25 +37,36 @@ public class InscricoesController {
     @Autowired
     private EventosDao eventosDao;
     
+    @Transactional
     @PostMapping("/realizarInscricao")
     public ResponseEntity<?> saveInscricao(@RequestBody InscricoesRequestDTO data) {
         try {
-            
+            Acoes acao = acoesDao.findByTitulo(data.acao());
+        
+            if (acao.getVagasDisponiveis() <= 0) {
+                return ResponseEntity.status(400).body(Map.of(
+                "message", "Não há vagas disponíveis para essa ação."
+                ));
+            }
+        
             Inscricoes inscricoesData = new Inscricoes(data);
-            inscricoesData.setAcao(acoesDao.findByTitulo(data.acao()));
             inscricoesData.setEvento(eventosDao.findByNome(data.evento()));
             inscricoesData.setUsuario(usuarioDao.findByNome(data.usuario()));
+
+            acao.setVagasDisponiveis(acao.getVagasDisponiveis() - 1);
+            acoesDao.save(acao);
+            inscricoesData.setAcao(acao);
 
             dao.save(inscricoesData);
 
             return ResponseEntity.ok().body(Map.of(
-                "message", "Usuário cadastrado com sucesso! Confirme através do email."
+            "message", "Inscrição realizada com sucesso!"
             ));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Map.of(
-                "message", "Erro ao cadastrar usuário.",
+                "message", "Erro ao realizar a inscrição.",
                 "error", e.getMessage()
             ));
         }
-    }    
+    }
 }

@@ -87,7 +87,7 @@ function CriarResponsavel() {
       })
       .then((data) => {
         alert("Responsável definido com sucesso!");
-        // navigate("/visualizarResponsaveis");
+        navigate("/HomeLogged");
       })
       .catch((error) => {
         console.error("Erro ao enviar os dados:", error);
